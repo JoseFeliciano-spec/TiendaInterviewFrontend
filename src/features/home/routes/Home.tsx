@@ -82,17 +82,6 @@ export function Home() {
 
   return (
     <>
-      {/* SEO Meta Tags */}
-      <head>
-        <title>TiendaApp - Tu Tienda Online de Confianza | Pagos Seguros con tienda</title>
-        <meta name="description" content="Descubre productos increíbles en TiendaApp. Pagos seguros, envío gratis y la mejor experiencia de compra online. ¡Compra ahora!" />
-        <meta name="keywords" content="tienda online, ecommerce, pagos seguros, tienda, productos electrónicos, envío gratis" />
-        <meta property="og:title" content="TiendaApp - Tu Tienda Online de Confianza" />
-        <meta property="og:description" content="La mejor experiencia de compra online con pagos seguros y envío gratis." />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://tiendaapp.com" />
-      </head>
-
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-[#B0F2AE] via-[#99D1FC] to-[#DFFF61] py-20 lg:py-32">

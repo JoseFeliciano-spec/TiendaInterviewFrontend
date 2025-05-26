@@ -255,7 +255,6 @@ export function CheckoutModal({
         );
 
       // ... (casos processing y result mantienen la misma lógica)
-
       default:
         return null;
     }
