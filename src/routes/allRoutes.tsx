@@ -31,6 +31,11 @@ const { CheckoutPage } = lazyImport(
   "CheckoutPage"
 );
 
+const { TransactionHistoryPage } = lazyImport(
+  () => import("@/features/historial"),
+  "TransactionHistoryPage"
+);
+
 export const allRoutes = [
   {
     path: "",
@@ -40,6 +45,7 @@ export const allRoutes = [
       { path: "/products", element: <ProductsPage /> },
       { path: "/products/:id", element: <ProductPage /> },
       { path: "/checkout", element: <CheckoutPage /> },
+      { path: "/historial", element: <TransactionHistoryPage /> },
     ],
   },
   {

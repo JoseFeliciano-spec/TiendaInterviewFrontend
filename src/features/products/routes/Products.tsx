@@ -17,10 +17,13 @@ import {
   FiLoader,
 } from "react-icons/fi";
 import { useProducts, type Product } from '@/hooks/products/useProducts';
+import { useCart } from "@/hooks/cart/useCart";
 
 export function ProductsPage() {
   const router = useNavigate();
   
+  const {addProduct} = useCart();
+
   // Estados para filtros y UI
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000000]);
@@ -49,6 +52,7 @@ export function ProductsPage() {
     refetch,
     isFetching 
   } = useProducts(queryParams);
+
 
   // Categorías dinámicas (puedes hacer otro hook para esto si quieres)
   const categories = [
@@ -86,7 +90,7 @@ export function ProductsPage() {
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation(); // Evitar navegación cuando se hace clic en el botón
     
-    router(`/checkout?product=${product.id}`);
+    addProduct(product);
   };
 
   // Filtrado local (el filtrado principal se hace en el backend)
@@ -645,8 +649,7 @@ export function ProductsPage() {
                             className="flex-1 bg-gradient-to-r from-[#00825A] to-[#B0F2AE] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 text-sm"
                           >
                             <FiShoppingCart size={16} />
-                            <span className="hidden sm:inline">Agregar</span>
-                            <span className="sm:hidden">Comprar</span>
+                            <span>Agregar</span>
                           </motion.button>
 
                           <motion.button

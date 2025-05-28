@@ -1,24 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/layout/LayoutInside.tsx
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FiHome, 
-  FiShoppingBag, 
-  FiShoppingCart, 
-  FiUser, 
-  FiMenu, 
-  FiX, 
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FiHome,
+  FiShoppingBag,
+  FiShoppingCart,
+  FiUser,
+  FiMenu,
+  FiX,
   FiHeart,
   FiTruck,
   FiShield,
   FiRefreshCw,
   FiLogOut,
-  FiLogIn
-} from 'react-icons/fi';
-import { useAppDispatch } from '@/store/redux';
-import { openLoginModal, openRegisterModal } from '@/store/slices/auth/authModalSlice';
-import { useLogout } from '@/hooks/useAuth';
-import { useAuthState } from '@/hooks/useAuthState';
+  FiLogIn,
+} from "react-icons/fi";
+import { useAppDispatch } from "@/store/redux";
+import {
+  openLoginModal,
+  openRegisterModal,
+} from "@/store/slices/auth/authModalSlice";
+import { useLogout } from "@/hooks/useAuth";
+import { useAuthState } from "@/hooks/useAuthState";
+import { useCart } from "@/hooks/cart/useCart";
 
 interface LayoutInsideProps {
   children: React.ReactElement;
@@ -29,30 +34,36 @@ export function LayoutInside({ children }: LayoutInsideProps) {
   const { isAuthenticated, user } = useAuthState();
   const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [cartItems, setCartItems] = useState(3);
-
+  const { items } = useCart();
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const navigationItems = [
-    { icon: FiHome, label: 'Inicio', href: '/' },
-    { icon: FiShoppingBag, label: 'Productos', href: '/products' },
-    { icon: FiShoppingCart, label: 'Carrito', href: '/checkout', badge: cartItems },
-    { icon: FiHeart, label: 'Favoritos', href: '/favoritos' },
-    ...(isAuthenticated ? [
-      { icon: FiUser, label: 'Mi Cuenta', href: '/cuenta' },
-    ] : []),
+    { icon: FiHome, label: "Inicio", href: "/" },
+    { icon: FiShoppingBag, label: "Productos", href: "/products" },
+    {
+      icon: FiShoppingCart,
+      label: "Carrito",
+      href: "/checkout",
+      badge: items?.length,
+    },
+    ...(isAuthenticated
+      ? [
+          { icon: FiHeart, label: "Historial", href: "/historial" },
+          { icon: FiUser, label: "Mi Cuenta", href: "/cuenta" },
+        ]
+      : []),
   ];
 
   const valuePropositions = [
-    { icon: FiTruck, text: 'Envío Gratis +$50k' },
-    { icon: FiShield, text: 'Compra Segura' },
-    { icon: FiRefreshCw, text: 'Devolución 30 días' }
+    { icon: FiTruck, text: "Envío Gratis +$50k" },
+    { icon: FiShield, text: "Compra Segura" },
+    { icon: FiRefreshCw, text: "Devolución 30 días" },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Barra de propuesta de valor */}
-      <motion.div 
+      <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="bg-gradient-to-r from-[#00825A] to-[#B0F2AE] text-white py-2 text-center text-sm"
@@ -74,7 +85,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
       </motion.div>
 
       {/* Header Principal con Auth */}
-      <motion.header 
+      <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ delay: 0.2 }}
@@ -90,8 +101,8 @@ export function LayoutInside({ children }: LayoutInsideProps) {
               >
                 <FiMenu size={24} />
               </button>
-              
-              <motion.div 
+
+              <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center space-x-3"
               >
@@ -100,7 +111,9 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                 </div>
                 <div className="hidden sm:block">
                   <h1 className="text-xl font-bold text-gray-900">TiendaApp</h1>
-                  <p className="text-xs text-gray-500">Test Tienda - Pago Seguro</p>
+                  <p className="text-xs text-gray-500">
+                    Test Tienda - Pago Seguro
+                  </p>
                 </div>
               </motion.div>
             </div>
@@ -117,7 +130,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                 >
                   <item.icon size={20} />
                   <span className="font-medium">{item.label}</span>
-                  {item.badge && (
+                  {parseInt(item.badge as any) > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -143,7 +156,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                       Bienvenido de vuelta
                     </p>
                   </div>
-                  
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -166,7 +179,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                     <FiLogIn size={18} />
                     <span className="hidden sm:inline">Iniciar Sesión</span>
                   </motion.button>
-                  
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -178,7 +191,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                   </motion.button>
                 </div>
               )}
-              
+
               {/* Carrito siempre visible */}
               <motion.a
                 href="/checkout"
@@ -187,13 +200,13 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                 className="relative p-2 text-gray-600 hover:text-[#00825A] transition-colors rounded-lg hover:bg-[#00825A]/10"
               >
                 <FiShoppingCart size={22} />
-                {cartItems > 0 && (
+                {items?.length > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
                   >
-                    {cartItems}
+                    {items?.length}
                   </motion.span>
                 )}
               </motion.a>
@@ -214,7 +227,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
               className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
               onClick={toggleSidebar}
             />
-            
+
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -230,11 +243,16 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                       <span className="text-white font-bold text-lg">T</span>
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-900">TiendaApp</h2>
+                      <h2 className="text-lg font-bold text-gray-900">
+                        TiendaApp
+                      </h2>
                       <p className="text-xs text-gray-500">Test Tienda</p>
                     </div>
                   </div>
-                  <button onClick={toggleSidebar} className="p-2 rounded-md text-gray-600">
+                  <button
+                    onClick={toggleSidebar}
+                    className="p-2 rounded-md text-gray-600"
+                  >
                     <FiX size={24} />
                   </button>
                 </div>
@@ -247,7 +265,9 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                         <FiUser className="text-white" size={18} />
                       </div>
                       <div>
-                        <p className="font-semibold text-[#2C2A29]">{user?.name}</p>
+                        <p className="font-semibold text-[#2C2A29]">
+                          {user?.name}
+                        </p>
                         <p className="text-xs text-gray-500">{user?.email}</p>
                       </div>
                     </div>
@@ -303,9 +323,9 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                     >
                       <item.icon size={22} />
                       <span className="font-medium">{item.label}</span>
-                      {item.badge && (
+                      {parseInt(item?.badge as any) > 0 && (
                         <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
-                          {item.badge}
+                          {item?.badge}
                         </span>
                       )}
                     </motion.a>
@@ -330,7 +350,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
       </main>
 
       {/* Footer */}
-      <motion.footer 
+      <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -345,36 +365,56 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">TiendaApp</h3>
-                  <p className="text-gray-400 text-sm">Test tienda - Pago Seguro</p>
+                  <p className="text-gray-400 text-sm">
+                    Test tienda - Pago Seguro
+                  </p>
                 </div>
               </div>
               <p className="text-gray-400 mb-6 max-w-md">
-                Plataforma de prueba para el test técnico de tienda. 
-                Integración completa con Redux Toolkit y TanStack Query.
+                Plataforma de prueba para el test técnico de tienda. Integración
+                completa con Redux Toolkit y TanStack Query.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Test Features</h4>
               <ul className="space-y-2">
-                <li><span className="text-gray-400">✓ Autenticación completa</span></li>
-                <li><span className="text-gray-400">✓ Checkout con tienda</span></li>
-                <li><span className="text-gray-400">✓ Responsive design</span></li>
-                <li><span className="text-gray-400">✓ Recovery en refresh</span></li>
+                <li>
+                  <span className="text-gray-400">
+                    ✓ Autenticación completa
+                  </span>
+                </li>
+                <li>
+                  <span className="text-gray-400">✓ Checkout con tienda</span>
+                </li>
+                <li>
+                  <span className="text-gray-400">✓ Responsive design</span>
+                </li>
+                <li>
+                  <span className="text-gray-400">✓ Recovery en refresh</span>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Tecnologías</h4>
               <ul className="space-y-2">
-                <li><span className="text-gray-400">React + TypeScript</span></li>
-                <li><span className="text-gray-400">Redux Toolkit</span></li>
-                <li><span className="text-gray-400">TanStack Query</span></li>
-                <li><span className="text-gray-400">Framer Motion</span></li>
+                <li>
+                  <span className="text-gray-400">React + TypeScript</span>
+                </li>
+                <li>
+                  <span className="text-gray-400">Redux Toolkit</span>
+                </li>
+                <li>
+                  <span className="text-gray-400">TanStack Query</span>
+                </li>
+                <li>
+                  <span className="text-gray-400">Framer Motion</span>
+                </li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
             <p>&copy; 2025 TiendaApp - Test Técnico</p>
           </div>

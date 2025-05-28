@@ -179,6 +179,7 @@ export const useLogout = () => {
 
   return () => {
     dispatch(logout());
+    storage.clearToken();
     queryClient.clear();
     toast.success("Sesión cerrada exitosamente");
   };

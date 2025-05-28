@@ -36,8 +36,6 @@ export function ProductPage() {
     isFetching,
   } = useProductBySlug(queryFromUrl);
 
-  console.log(searchData);
-
   // Effect para manejar el primer producto encontrado
   useEffect(() => {
     if (searchData && searchData.products.length > 0) {
