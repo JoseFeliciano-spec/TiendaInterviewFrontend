@@ -4,11 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { axios } from "@/lib/axios";
 import { setCredentials, logout, setUser } from "@/store/slices/auth/authSlice";
-import {
-  closeAuthModal,
-  setLoading,
-  switchToLogin,
-} from "@/store/slices/auth/authModalSlice";
 import storage from "@/lib/storage";
 import { toast } from "react-hot-toast";
 import { useAppDispatch } from "@/store/redux";
@@ -77,9 +72,6 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: authApi.login,
-    onMutate: () => {
-      dispatch(setLoading(true));
-    },
     onSuccess: async (response) => {
       storage.setToken(response?.access_token);
 
@@ -93,7 +85,6 @@ export const useLogin = () => {
         );
 
         queryClient.invalidateQueries({ queryKey: ["user"] });
-        dispatch(closeAuthModal());
         toast.success("¡Bienvenido de vuelta!");
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -106,35 +97,23 @@ export const useLogin = () => {
         error.response?.data?.message || "Error al iniciar sesión";
       toast.error(message);
     },
-    onSettled: () => {
-      dispatch(setLoading(false));
-    },
   });
 };
 
 // Hook para register
 export const useRegister = () => {
-  const dispatch = useAppDispatch();
-
   return useMutation({
     mutationFn: authApi.register,
-    onMutate: () => {
-      dispatch(setLoading(true));
-    },
     onSuccess: () => {
       toast.success(
         "¡Cuenta creada exitosamente! Ahora puedes iniciar sesión."
       );
-      dispatch(switchToLogin());
     },
     onError: (error: any) => {
       console.error("Register error:", error);
       const message =
         error.response?.data?.message || "Error al crear la cuenta";
       toast.error(message);
-    },
-    onSettled: () => {
-      dispatch(setLoading(false));
     },
   });
 };

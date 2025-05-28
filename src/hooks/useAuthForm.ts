@@ -10,7 +10,6 @@ const loginSchema = yup.object().shape({
     .email('Email debe tener un formato válido')
     .max(100, 'Email no puede exceder 100 caracteres')
     .trim(),
-  
   password: yup
     .string()
     .required('Contraseña es requerida')
@@ -54,21 +53,7 @@ const registerSchema = yup.object().shape({
 export type LoginFormData = yup.InferType<typeof loginSchema>;
 export type RegisterFormData = yup.InferType<typeof registerSchema>;
 
-// Hook para formulario de login
-export const useLoginForm = (): UseFormReturn<LoginFormData> => {
-  return useForm<LoginFormData>({
-    resolver: yupResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-    mode: 'onChange', // Validación en tiempo real
-    reValidateMode: 'onChange',
-    criteriaMode: 'all', // Mostrar todos los errores
-  });
-};
-
-// Hook para formulario de registro
+// Hook para formulario de registro con mejor gestión de validación
 export const useRegisterForm = (): UseFormReturn<RegisterFormData> => {
   return useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
@@ -78,11 +63,28 @@ export const useRegisterForm = (): UseFormReturn<RegisterFormData> => {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange', // Validación en tiempo real
+    mode: 'onBlur', // Cambiar a onBlur para evitar validación agresiva
     reValidateMode: 'onChange',
-    criteriaMode: 'all', // Mostrar todos los errores
+    criteriaMode: 'all',
+    shouldFocusError: true, // Enfocar en errores automáticamente
   });
 };
+
+// Hook para formulario de login
+export const useLoginForm = (): UseFormReturn<LoginFormData> => {
+  return useForm<LoginFormData>({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onBlur', // Cambiar a onBlur para mejor UX
+    reValidateMode: 'onChange',
+    criteriaMode: 'all',
+    shouldFocusError: true,
+  });
+};
+
 
 // Hook adicional para validaciones específicas (opcional)
 export const useAuthValidation = () => {
