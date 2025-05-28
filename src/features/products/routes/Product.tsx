@@ -17,12 +17,15 @@ import {
   type SearchedProduct,
 } from "@/hooks/products/useProductSearch";
 import { toast } from "react-hot-toast";
+import { useCart } from "@/hooks/cart/useCart";
 
 export function ProductPage() {
   const { id } = useParams<{ id: string }>(); // Obtener slug de la URL
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] =
     useState<SearchedProduct | null>(null);
+
+  const { addProduct } = useCart();
 
   // Obtener query adicional de URL params si existe
   const queryFromUrl = id || "";
@@ -55,8 +58,8 @@ export function ProductPage() {
 
   const handleAddToCart = (product: SearchedProduct, e: React.MouseEvent) => {
     e.stopPropagation();
-    // Integrar con Redux/Zustand según especificaciones del test
-    console.log("Adding to cart:", product);
+    addProduct(product);
+
     toast.success(`${product.name} agregado al carrito`);
   };
 

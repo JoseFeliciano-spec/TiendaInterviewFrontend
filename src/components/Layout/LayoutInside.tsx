@@ -24,6 +24,7 @@ import {
 import { useLogout } from "@/hooks/useAuth";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useCart } from "@/hooks/cart/useCart";
+import { useNavigate } from "react-router-dom";
 
 interface LayoutInsideProps {
   children: React.ReactElement;
@@ -35,6 +36,7 @@ export function LayoutInside({ children }: LayoutInsideProps) {
   const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { items } = useCart();
+  const navigation = useNavigate();
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const navigationItems = [
@@ -123,7 +125,9 @@ export function LayoutInside({ children }: LayoutInsideProps) {
               {navigationItems.slice(0, 4).map((item) => (
                 <motion.a
                   key={item.label}
-                  href={item.href}
+                  onClick={() => {
+                    navigation(item?.href);
+                  }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center space-x-2 text-gray-600 hover:text-[#00825A] transition-all duration-200 relative py-2 px-3 rounded-lg hover:bg-[#00825A]/10"
@@ -314,12 +318,15 @@ export function LayoutInside({ children }: LayoutInsideProps) {
                   {navigationItems.map((item, index) => (
                     <motion.a
                       key={item.label}
-                      href={item.href}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                       className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:text-[#00825A] hover:bg-[#00825A]/10 transition-all relative"
-                      onClick={toggleSidebar}
+                      onClick={() => {
+                        navigation(item?.href);
+
+                        toggleSidebar();
+                      }}
                     >
                       <item.icon size={22} />
                       <span className="font-medium">{item.label}</span>
